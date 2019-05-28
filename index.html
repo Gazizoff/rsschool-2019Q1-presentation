@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h2>Fonts loading strategy</h2>
+			</section>>
+			<section>
+				<section>
+					<h4>There are just four steps to consider when loading a custom web font:</h4>
+					<ol>
+						<li class="fragment">Use the correct font format</li>
+						<li class="fragment">Preload fonts</li>
+						<li class="fragment">Use the correct font-face declaration</li>
+						<li class="fragment">Avoid invisible text during font loading</li>
+					</ol>
+					<p class="fragment">Let’s break down these points one at a time</p>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h4>Use the correct font format</h4>
+					<p class="fragment">Today there are four font container formats in use on the web: EOT, TTF, WOFF,
+						and
+						WOFF2</p>
+					<ul>
+						<li class="fragment">Serve WOFF 2.0 variant to browsers that support it.</li>
+						<li class="fragment">Serve WOFF variant to the majority of browsers</li>
+						<li class="fragment">Serve TTF variant to old Android (below 4.4) browsers.</li>
+						<li class="fragment">Serve EOT variant to old IE (below IE9) browsers.</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h4>Preload fonts</h4>
+					<pre><code class="hljs" data-trim data-line-numbers="1-2,4-5">
+
+							link rel="preload" as="font" href="/fonts/custom-font.woff2"
+							type="font/woff2" crossorigin="anonymous"
+
+							link rel="preload" as="font" href="/fonts/custom-font.woff"
+							type="font/woff" crossorigin="anonymous"
+							</code></pre>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h4>Use the correct font-face declaration</h4>
+					<pre><code class="hljs" data-trim data-line-numbers="1-9">
+								@font-face {  
+									font-family: 'Custom Font'; 
+									font-weight: 400;
+									font-style: normal;
+									font-display: swap;
+									unicode-range: U+000-5FF; /*Download only latin glyphs*/
+									src: local('Custom Font'),
+									url('/fonts/custom-font.woff2') format('woff2'),
+									url('/fonts/custom-font.woff') format('woff');}
+						</code></pre>
+				</section>
+
+				<section>
+					<p>A webfont is a collection of glyphs, and each glyph is a vector shape that describes a letter or symbol.
+						As a result, two simple variables determine the size of a particular font file: 
+						the complexity of the vector paths of each glyph and the number of glyphs in a particular font.</p>
+					<img width="620" height="241" src="./assets/glyphs.png" alt="Up arrow">
+				</section>
+			</section>
+			<section>
+				<h4>Avoid invisible text during font loading</h4>
+				<pre><code class="hljs" data-trim data-line-numbers="2">
+						@font-face {  							
+							font-display: swap;
+						}
+				</code></pre>
+				<table class="fragment">
+					<thead>
+						<tr>
+							<th>Browser</th>
+							<th>Timeout</th>
+							<th>Fallback</th>
+							<th>Swap</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Chrome 35+</td>
+							<td>3 seconds</td>
+							<td>Yes</td>
+							<td>Yes</td>
+						</tr>
+						<tr>
+							<td>Opera</td>
+							<td>3 seconds</td>
+							<td>Yes</td>
+							<td>Yes</td>
+						</tr>
+						<tr>
+							<td>Firefox</td>
+							<td>3 seconds</td>
+							<td>Yes</td>
+							<td>Yes</td>
+						</tr>
+						<tr>
+							<td>Internet Explorer</td>
+							<td>0 seconds</td>
+							<td>Yes</td>
+							<td>Yes</td>
+						</tr>
+						<tr>
+							<td>Safari</td>
+							<td>No timeout</td>
+							<td>N/A</td>
+							<td>N/A</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<section>
+					<h4>Conclusion</h4>
+					Typography is fundamental to good design, branding, readability, and accessibility. 
+					Webfonts enable all of the above and more: the text is selectable, searchable, zoomable, and high-DPI friendly,
+					providing consistent and sharp text rendering regardless of the screen size and resolution. 
+					Webfonts are critical to good design, UX, and performance.
+			</section>
+		</div>
+	</div>
+
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true }
+			]
+		});
+	</script>
+</body>
+
+</html>
